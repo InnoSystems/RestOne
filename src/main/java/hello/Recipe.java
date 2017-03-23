@@ -60,7 +60,6 @@ public class Recipe {
 		sb.append("\"name\":\"" + name + "\",");
 		sb.append("\"description\":\"" + description + "\"");
 		sb.append("}");
-
 		return sb.toString();
 	}
 	
