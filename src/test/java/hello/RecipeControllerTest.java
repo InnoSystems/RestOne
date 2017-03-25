@@ -17,19 +17,20 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class RecipeControllerTest {
-	
-	@Autowired
+
+    @Autowired
     private MockMvc mvc;
 
     @Test
     public void getHello() throws Exception {
-    	
-//        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.post("/Recipes").accept(MediaType.APPLICATION_JSON));
-//        
-//        resultActions.andExpect(status().isOk());
-                
-//        .andExpect(content().string(equalTo("Greetings from Spring Boot!")));
-    
+
+	// ResultActions resultActions =
+	// mvc.perform(MockMvcRequestBuilders.post("/Recipes").accept(MediaType.APPLICATION_JSON));
+	//
+	// resultActions.andExpect(status().isOk());
+
+	// .andExpect(content().string(equalTo("Greetings from Spring Boot!")));
+
     }
-	
+
 }

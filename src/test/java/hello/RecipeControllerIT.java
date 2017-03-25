@@ -52,11 +52,10 @@ public class RecipeControllerIT {
 		ResponseEntity<Recipe> response = template.postForEntity(base.toString(), request, Recipe.class);
 
 		// ### validate ###
-		Recipe recipse = response.getBody();
-		assertNotNull(recipse.getId());
-		assertThat(recipse.getName(), equalTo(name));
-		assertThat(recipse.getDescription(), equalTo(description));
-
+		Recipe recipe = response.getBody();
+		assertNotNull(recipe.getId());
+		assertThat(recipe.getName(), equalTo(name));
+		assertThat(recipe.getDescription(), equalTo(description));
 	}
 
 	@Test
@@ -85,7 +84,6 @@ public class RecipeControllerIT {
 		assertNotNull(receivedRecipe.getId());
 		assertThat(receivedRecipe.getName(), equalTo(name));
 		assertThat(receivedRecipe.getDescription(), equalTo(description));
-
 	}
 
 	@Test
@@ -120,7 +118,6 @@ public class RecipeControllerIT {
 		Recipe updatedRecipe = getRecipe.getBody();
 		assertEquals(newName, updatedRecipe.getName());
 		assertEquals(newDescription, updatedRecipe.getDescription());
-		
 	}
 
 	@Test
@@ -143,7 +140,6 @@ public class RecipeControllerIT {
 				Recipe.class);
 		Recipe emptyRecipe = getResponse.getBody();
 		assertNull(emptyRecipe);
-
 	}
 
 	private String createRecipe() {
