@@ -13,9 +13,7 @@ public class Recipe {
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	private String id;
-	
 	private String name;
-	
 	private String description;
 
 	protected Recipe() {
@@ -29,10 +27,6 @@ public class Recipe {
 	public String getId() {
 		return id;
 	}
-
-//	public void setId(String id) {
-//		this.id = id;
-//	}
 
 	public String getName() {
 		return name;
