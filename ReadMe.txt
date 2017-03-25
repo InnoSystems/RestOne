@@ -44,6 +44,7 @@ Informations:
 	- Open points:
 		- The Endpoint "getList" didn't work when both Query-Parameter are set. The RecipeRepository must be extended.
 		https://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-eight-adding-functionality-to-a-repository/ 	       
-		
+		- Using an extern H2-Database instead of the intern H2-Database
+		- Build the project as a War and deploy it in a Tomcat. 
 		
 		

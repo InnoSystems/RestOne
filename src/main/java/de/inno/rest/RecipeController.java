@@ -1,4 +1,4 @@
-package hello;
+package de.inno.rest;
 
 import java.util.Iterator;
 
@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.inno.db.Recipe;
+import de.inno.db.RecipeRepository;
+
 @RestController 
 @RequestMapping("/Recipes")
 public class RecipeController {
@@ -20,7 +23,7 @@ public class RecipeController {
 
 	@Autowired
 	private RecipeRepository repository;
-
+	
 	@RequestMapping(method = RequestMethod.POST)
 	public String createRecipe(@RequestBody Recipe recipe) {
 
@@ -58,7 +61,7 @@ public class RecipeController {
 		} else if (isQueryParameterEmpty(name) && !isQueryParameterEmpty(description)) {
 			recipes = repository.findByDescription(description);
 		} else if (!isQueryParameterEmpty(name) && !isQueryParameterEmpty(description)) {
-			recipes = repository.findByNameAndDescription(name, description);
+			recipes = repository.findByNameOrDescription(name, description);
 		}
 
 		// recipes to JsonArray

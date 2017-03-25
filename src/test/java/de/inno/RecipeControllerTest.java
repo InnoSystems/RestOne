@@ -1,4 +1,4 @@
-package hello;
+package de.inno;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
