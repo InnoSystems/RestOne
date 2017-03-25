@@ -2,8 +2,6 @@ package hello;
 
 import java.util.Iterator;
 
-import javax.websocket.server.PathParam;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/Customers")
-public class HelloController {
+@RestController 
+@RequestMapping("/Recipes")
+public class RecipeController {
 
-	private static final Logger log = LoggerFactory.getLogger(HelloController.class);
+	private static final Logger log = LoggerFactory.getLogger(RecipeController.class);
 
 	@Autowired
 	private RecipeRepository repository;

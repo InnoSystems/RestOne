@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class HelloControllerIT {
+public class RecipeControllerIT {
 
 	@LocalServerPort
 	private int port;
@@ -33,7 +33,7 @@ public class HelloControllerIT {
 
 	@Before
 	public void setUp() throws Exception {
-		this.base = new URL("http://localhost:" + port + "/Customers");
+		this.base = new URL("http://localhost:" + port + "/Recipes");
 	}
 
 	@Test

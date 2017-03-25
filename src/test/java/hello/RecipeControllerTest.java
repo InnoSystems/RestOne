@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class HelloControllerTest {
+public class RecipeControllerTest {
 	
 	@Autowired
     private MockMvc mvc;
@@ -24,9 +24,9 @@ public class HelloControllerTest {
     @Test
     public void getHello() throws Exception {
     	
-        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.post("/Customers").accept(MediaType.APPLICATION_JSON));
-        
-        resultActions.andExpect(status().isOk());
+//        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.post("/Recipes").accept(MediaType.APPLICATION_JSON));
+//        
+//        resultActions.andExpect(status().isOk());
                 
 //        .andExpect(content().string(equalTo("Greetings from Spring Boot!")));
     
