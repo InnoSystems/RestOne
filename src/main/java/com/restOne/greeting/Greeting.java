@@ -1,4 +1,4 @@
-package hello;
+package com.restOne.greeting;
 
 public class Greeting {
 
