@@ -1,4 +1,4 @@
-package hello;
+package com.restOne.hello;
 
 import java.util.List;
 
