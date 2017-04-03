@@ -124,7 +124,7 @@ public class RecipeController {
 	 * 
 	 * @param queryParamter
 	 *            the query parameter
-	 * @return true if the query paramter has a value, otherwise false
+	 * @return true if the query parameter has a value, otherwise false
 	 */
 	private Boolean isQueryParameterEmpty(final String queryParamter) {
 		if (queryParamter == null || queryParamter.length() == 0) {
