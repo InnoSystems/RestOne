@@ -8,6 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+
+import com.restOne.configurationExample.AnnotationConfiguration;
+import com.restOne.configurationExample.TypeSafeConfiguration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +22,14 @@ public class Application {
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
-	SpringApplication.run(Application.class, args);
+    	final ApplicationContext ctx = SpringApplication.run(Application.class, args);
+    	final TypeSafeConfiguration typeSafeConfiguration = ctx.getBean(TypeSafeConfiguration.class);
+        final AnnotationConfiguration annotationConfiguration = ctx.getBean(AnnotationConfiguration.class);
+
+        info("Application initialized with the following configuration:");
+        info(typeSafeConfiguration.toString());
+        info(annotationConfiguration.toString());
+        System.out.println();
     }
 
     @Bean
@@ -37,6 +48,10 @@ public class Application {
 	    LOG.debug("inspected the beans");
 
 	};
+    }
+    
+    private static void info(String text) {
+        System.out.println(String.format("Application.java: %s", text));
     }
 
 }
