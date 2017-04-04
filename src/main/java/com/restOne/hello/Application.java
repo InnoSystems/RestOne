@@ -15,7 +15,7 @@ import com.restOne.configurationExample.TypeSafeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ComponentScan(basePackages = { "com.restOne.hello", "com.restOne.greeting" })
+@ComponentScan(basePackages = { "com.restOne.hello", "com.restOne.greeting", "com.restOne.configurationExample" })
 @SpringBootApplication
 public class Application {
 
