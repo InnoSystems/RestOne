@@ -88,7 +88,51 @@ public class RecipeControllerIT {
 		assertThat(receivedRecipe.getName(), equalTo(name));
 		assertThat(receivedRecipe.getDescription(), equalTo(description));
 	}
+	
+	@Test
+	public void getRecipeList() {
 
+		// ### prepare test ###
+
+		// create recipe
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		final String name = "Kuchen123";
+		final String description = "Supi";
+
+		HttpEntity<String> request = new HttpEntity<>(createRecipe(name, description), headers);
+
+		ResponseEntity<Recipe> response = template.postForEntity(base.toString(), request, Recipe.class);
+		Recipe createdRecipe = response.getBody();
+
+		// ### start test ###
+		ResponseEntity<Recipe[]> secondResponse = template.getForEntity(base.toString() + "?description=" + description,
+				Recipe[].class);
+
+		ResponseEntity<Recipe[]> thirdResponse = template.getForEntity(base.toString() + "?name=" + name,
+				Recipe[].class);
+
+		ResponseEntity<Recipe[]> fourthResponse = template
+				.getForEntity(base.toString() + "?name=" + name + "&description=" + description, Recipe[].class);
+
+		ResponseEntity<Recipe[]> fifthResponse = template.getForEntity(base.toString() + "?name=" + "unkown",
+				Recipe[].class);
+
+		// ### validate ###
+		Recipe[] secondRecipe = secondResponse.getBody();
+		assertEquals(createdRecipe.getId(), secondRecipe[0].getId());
+
+		Recipe[] thirdRecipe = thirdResponse.getBody();
+		assertEquals(createdRecipe.getId(), thirdRecipe[0].getId());
+
+		Recipe[] fourthRecipe = fourthResponse.getBody();
+		assertEquals(createdRecipe.getId(), fourthRecipe[0].getId());
+		
+		Recipe[] fifthRecipe = fifthResponse.getBody();
+		assertEquals(0, fifthRecipe.length);
+	}
+	
 	@Test
 	public void updateRecipe() {
 

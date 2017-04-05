@@ -10,5 +10,5 @@ public interface RecipeRepository extends CrudRepository<Recipe, String> {
 	
 	List<Recipe> findByDescription(String description);
 	
-	List<Recipe> findByNameAndDescription(String name, String description);
+	List<Recipe> findByNameOrDescription(String name, String description);
 }
