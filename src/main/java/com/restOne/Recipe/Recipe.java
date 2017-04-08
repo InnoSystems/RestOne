@@ -1,4 +1,4 @@
-package com.restOne.hello;
+package com.restOne.Recipe;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

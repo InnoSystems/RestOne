@@ -1,4 +1,4 @@
-package com.restOne.hello;
+package com.restOne.Recipe;
 
 import java.util.Arrays;
 
@@ -15,7 +15,7 @@ import com.restOne.configurationExample.TypeSafeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ComponentScan(basePackages = { "com.restOne.hello", "com.restOne.greeting", "com.restOne.configurationExample" })
+@ComponentScan(basePackages = { "com.restOne.Recipe", "com.restOne.greeting", "com.restOne.configurationExample" })
 @SpringBootApplication
 public class Application {
 

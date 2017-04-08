@@ -1,4 +1,4 @@
-package com.restOne.hello.test;
+package com.restOne.Recipe.test;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
