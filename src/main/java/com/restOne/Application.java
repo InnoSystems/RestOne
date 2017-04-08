@@ -1,4 +1,4 @@
-package com.restOne.Recipe;
+package com.restOne;
 
 import java.util.Arrays;
 
@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+import com.restOne.Recipe.RecipeRepository;
 import com.restOne.configurationExample.AnnotationConfiguration;
 import com.restOne.configurationExample.TypeSafeConfiguration;
 
