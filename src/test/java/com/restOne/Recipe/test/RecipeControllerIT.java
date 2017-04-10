@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.net.URL;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,7 @@ import com.restOne.Recipe.Recipe;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations="classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class RecipeControllerIT {
 
 	@LocalServerPort
@@ -37,6 +38,11 @@ public class RecipeControllerIT {
 	@Before
 	public void setUp() throws Exception {
 		this.base = new URL("http://localhost:" + port + "/Recipes");
+	}
+
+	@After
+	public void setDown() {
+		deleteAllRecipes();
 	}
 
 	@Test
@@ -88,7 +94,7 @@ public class RecipeControllerIT {
 		assertThat(receivedRecipe.getName(), equalTo(name));
 		assertThat(receivedRecipe.getDescription(), equalTo(description));
 	}
-	
+
 	@Test
 	public void getRecipeList() {
 
@@ -98,41 +104,38 @@ public class RecipeControllerIT {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		final String name = "Kuchen123";
-		final String description = "Supi";
+		final String name1 = "Kuchen123", name2 = "Kuchen123";
+		final String description1 = "supi", description2 = "Gut";
 
-		HttpEntity<String> request = new HttpEntity<>(createRecipe(name, description), headers);
-
-		ResponseEntity<Recipe> response = template.postForEntity(base.toString(), request, Recipe.class);
-		Recipe createdRecipe = response.getBody();
-
+		HttpEntity<String> requestOne = new HttpEntity<>(createRecipe(name1, description1), headers);
+		HttpEntity<String> requestTwo = new HttpEntity<>(createRecipe(name2, description2), headers);
+		
+		template.postForEntity(base.toString(), requestTwo, Recipe.class);
+		ResponseEntity<Recipe> createResponse = template.postForEntity(base.toString(), requestOne, Recipe.class);
+		Recipe createdRecipe = createResponse.getBody();
+		
 		// ### start test ###
-		ResponseEntity<Recipe[]> secondResponse = template.getForEntity(base.toString() + "?description=" + description,
+		ResponseEntity<Recipe[]> secondResponse = template.getForEntity(base.toString() + "?description=" + description1,
 				Recipe[].class);
 
-		ResponseEntity<Recipe[]> thirdResponse = template.getForEntity(base.toString() + "?name=" + name,
+		ResponseEntity<Recipe[]> thirdResponse = template.getForEntity(base.toString() + "?name=" + name1,
 				Recipe[].class);
 
 		ResponseEntity<Recipe[]> fourthResponse = template
-				.getForEntity(base.toString() + "?name=" + name + "&description=" + description, Recipe[].class);
-
-		ResponseEntity<Recipe[]> fifthResponse = template.getForEntity(base.toString() + "?name=" + "unkown",
-				Recipe[].class);
+				.getForEntity(base.toString() + "?name=" + name2 + "&description=" + description2, Recipe[].class);
 
 		// ### validate ###
 		Recipe[] secondRecipe = secondResponse.getBody();
 		assertEquals(createdRecipe.getId(), secondRecipe[0].getId());
 
 		Recipe[] thirdRecipe = thirdResponse.getBody();
-		assertEquals(createdRecipe.getId(), thirdRecipe[0].getId());
+		assertEquals(2, thirdRecipe.length);
 
 		Recipe[] fourthRecipe = fourthResponse.getBody();
-		assertEquals(createdRecipe.getId(), fourthRecipe[0].getId());
-		
-		Recipe[] fifthRecipe = fifthResponse.getBody();
-		assertEquals(0, fifthRecipe.length);
+		assertEquals(1, fourthRecipe.length);
+
 	}
-	
+
 	@Test
 	public void updateRecipe() {
 
@@ -187,6 +190,22 @@ public class RecipeControllerIT {
 				Recipe.class);
 		Recipe emptyRecipe = getResponse.getBody();
 		assertNull(emptyRecipe);
+	}
+
+	/**
+	 * Delete all Recipes in the database.
+	 */
+	private void deleteAllRecipes() {
+
+		ResponseEntity<Recipe[]> getResponse = template.getForEntity(base.toString(), Recipe[].class);
+		Recipe[] recipes = getResponse.getBody();
+
+		Recipe recipe = null;
+		for (int i = 0; i < recipes.length; i++) {
+			recipe = recipes[i];
+			template.delete(base.toString() + "/" + recipe.getId());
+		}
+
 	}
 
 	private String createRecipe() {

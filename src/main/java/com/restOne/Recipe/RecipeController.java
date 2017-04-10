@@ -58,7 +58,7 @@ public class RecipeController {
 		} else if (isQueryParameterEmpty(name) && !isQueryParameterEmpty(description)) {
 			recipes = repository.findByDescription(description);
 		} else if (!isQueryParameterEmpty(name) && !isQueryParameterEmpty(description)) {
-			recipes = repository.findByNameOrDescription(name, description);
+			recipes = repository.findByNameAndDescription(name, description);
 		}
 
 		// recipes to JsonArray
