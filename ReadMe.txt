@@ -1,7 +1,7 @@
 Start RestOne GUI:
 --------------
 - Eclipse: right-click Application.java -> RunAs -> Java Application
-- Browser: http://localhost:8080/
+- Browser: http://localhost:8080
 
 	
 Test Project/Web-Service with cURL:
