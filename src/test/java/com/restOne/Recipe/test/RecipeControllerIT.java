@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
@@ -109,14 +111,14 @@ public class RecipeControllerIT {
 
 		HttpEntity<String> requestOne = new HttpEntity<>(createRecipe(name1, description1), headers);
 		HttpEntity<String> requestTwo = new HttpEntity<>(createRecipe(name2, description2), headers);
-		
+
 		template.postForEntity(base.toString(), requestTwo, Recipe.class);
 		ResponseEntity<Recipe> createResponse = template.postForEntity(base.toString(), requestOne, Recipe.class);
 		Recipe createdRecipe = createResponse.getBody();
-		
+
 		// ### start test ###
-		ResponseEntity<Recipe[]> secondResponse = template.getForEntity(base.toString() + "?description=" + description1,
-				Recipe[].class);
+		ResponseEntity<Recipe[]> secondResponse = template
+				.getForEntity(base.toString() + "?description=" + description1, Recipe[].class);
 
 		ResponseEntity<Recipe[]> thirdResponse = template.getForEntity(base.toString() + "?name=" + name1,
 				Recipe[].class);
@@ -134,6 +136,93 @@ public class RecipeControllerIT {
 		Recipe[] fourthRecipe = fourthResponse.getBody();
 		assertEquals(1, fourthRecipe.length);
 
+	}
+
+	@Test
+	public void getRecipeListFindAllPagination() {
+
+		// ### prepare test ###
+
+		final String expectedFrom = "1", expectedTo = "2", expectedCount = "5";
+		final String name1 = "Kuchen123", name2 = "Kuchen123";
+		final String description1 = "supi", description2 = "Gut";
+
+		// set Content-Type in header
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		// create recipes
+		HttpEntity<String> requestOne = new HttpEntity<>(createRecipe(name1, description1), headers);
+		HttpEntity<String> requestTwo = new HttpEntity<>(createRecipe(name2, description2), headers);
+		HttpEntity<String> requestThree = new HttpEntity<>(createRecipe(name2, description2), headers);
+		HttpEntity<String> requestFour = new HttpEntity<>(createRecipe(name2, description2), headers);
+		HttpEntity<String> requestFive = new HttpEntity<>(createRecipe(name2, description2), headers);
+
+		template.postForEntity(base.toString(), requestOne, Recipe.class);
+		template.postForEntity(base.toString(), requestTwo, Recipe.class);
+		template.postForEntity(base.toString(), requestThree, Recipe.class);
+		template.postForEntity(base.toString(), requestFour, Recipe.class);
+		template.postForEntity(base.toString(), requestFive, Recipe.class);
+
+		// ### start test ###
+		
+		// set range header
+		HttpHeaders reqHeaders = new HttpHeaders();
+		reqHeaders.set("Range", "item=" + expectedFrom + "-" + expectedTo);
+		
+		HttpEntity<String> entity = new HttpEntity<String>(reqHeaders);
+		ResponseEntity<Recipe[]> exchange = template.exchange(base.toString(), HttpMethod.GET, entity, Recipe[].class);
+
+		// ### validate ###
+		assertEquals(exchange.getStatusCode(), HttpStatus.OK);
+		HttpHeaders responseHeaders = exchange.getHeaders();
+		String contentRange = responseHeaders.get(HttpHeaders.CONTENT_RANGE).get(0);
+
+		assertEquals(expectedFrom + "-" + expectedTo + "/" + expectedCount, contentRange);
+	}
+
+	@Test
+	public void getRecipeListFindByNamePagination() {
+
+		// ### prepare test ###
+		final String from = "1", to = "2", count = "4";
+		final String name1 = "Kuchen123", name2 = "Suppe789";
+		final String description1 = "supi", description2 = "Gut";
+
+		// set Content-Type in header
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		// create recipes
+		HttpEntity<String> requestOne = new HttpEntity<>(createRecipe(name1, description1), headers);
+		HttpEntity<String> requestTwo = new HttpEntity<>(createRecipe(name1, description2), headers);
+		HttpEntity<String> requestThree = new HttpEntity<>(createRecipe(name1, description2), headers);
+		HttpEntity<String> requestFour = new HttpEntity<>(createRecipe(name1, description2), headers);
+		HttpEntity<String> requestFive = new HttpEntity<>(createRecipe(name2, description2), headers);
+
+		template.postForEntity(base.toString(), requestOne, Recipe.class);
+		template.postForEntity(base.toString(), requestTwo, Recipe.class);
+		template.postForEntity(base.toString(), requestThree, Recipe.class);
+		template.postForEntity(base.toString(), requestFour, Recipe.class);
+		template.postForEntity(base.toString(), requestFive, Recipe.class);
+
+		// ### start test ###
+
+		// set range header
+		HttpHeaders reqHeaders = new HttpHeaders();
+		reqHeaders.set("Range", "item=" + from + "-" + to);
+
+		// start test
+		HttpEntity<String> entity = new HttpEntity<String>(reqHeaders);
+		ResponseEntity<Recipe[]> exchange = template.exchange(base.toString() + "?name=" + name1, HttpMethod.GET,
+				entity, Recipe[].class);
+
+		// ### validate ###
+		assertEquals(exchange.getStatusCode(), HttpStatus.OK);
+		HttpHeaders responseHeaders = exchange.getHeaders();
+		String contentRange = responseHeaders.get(HttpHeaders.CONTENT_RANGE).get(0);
+
+		assertEquals(from + "-" + to + "/" + count, contentRange);
 	}
 
 	@Test
@@ -229,4 +318,5 @@ public class RecipeControllerIT {
 
 		return sb.toString();
 	}
+
 }
