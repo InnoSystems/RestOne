@@ -1,18 +1,27 @@
 package com.restOne.Recipe;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController 
+@RestController
 @RequestMapping("/Recipes")
 public class RecipeController {
 
@@ -22,13 +31,13 @@ public class RecipeController {
 	private RecipeRepository repository;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String createRecipe(@RequestBody Recipe recipe) {
+	public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
 
 		log.info("start creating recipe");
 
-		repository.save(recipe);
+		Recipe createdRecipe = repository.save(recipe);
 
-		return recipe.toString();
+		return new ResponseEntity<Recipe>(createdRecipe, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
@@ -47,35 +56,73 @@ public class RecipeController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String getListRecipe(@RequestParam(name = "name", required = false) final String name,
+	public ResponseEntity<List<Recipe>> getListRecipe(
+			@RequestHeader(name = HttpHeaders.RANGE, required = false) final String headerValueRange,
+			@RequestParam(name = "name", required = false) final String name,
 			@RequestParam(name = "description", required = false) final String description) {
 
-		Iterable<Recipe> recipes = null;
-		if (isQueryParameterEmpty(name) && isQueryParameterEmpty(description)) {
-			recipes = repository.findAll();
-		} else if (!isQueryParameterEmpty(name) && isQueryParameterEmpty(description)) {
-			recipes = repository.findByName(name);
-		} else if (isQueryParameterEmpty(name) && !isQueryParameterEmpty(description)) {
-			recipes = repository.findByDescription(description);
-		} else if (!isQueryParameterEmpty(name) && !isQueryParameterEmpty(description)) {
-			recipes = repository.findByNameAndDescription(name, description);
+		Pageable pageable = null;
+		if (headerValueRange != null && headerValueRange.length() > 0) {
+			int page, size;
+
+			// expect e.g item=1-20
+			String value = headerValueRange;
+			value = value.replace("item=", "");
+			String[] ranges = value.split("-");
+			page = Integer.valueOf(ranges[0]);
+			size = Integer.valueOf(ranges[1]);
+
+			pageable = new PageRequest(page, size);
 		}
 
-		// recipes to JsonArray
-		StringBuilder sb = new StringBuilder();
-		sb.append("[");
-		Recipe recipe = null;
-		Iterator<Recipe> recipeIter = recipes.iterator();
-		while (recipeIter.hasNext()) {
-			recipe = recipeIter.next();
-			sb.append(recipe.toString());
-			if (recipeIter.hasNext()) {
-				sb.append(",");
+		Iterable<Recipe> recipes = null;
+		Page<Recipe> page = null;
+		if (isQueryParameterEmpty(name) && isQueryParameterEmpty(description)) {
+			if (pageable != null) {
+				page = repository.findAll(pageable);
+				recipes = page.getContent();
+			} else {
+				recipes = repository.findAll();
+			}
+		} else if (!isQueryParameterEmpty(name) && isQueryParameterEmpty(description)) {
+			if (pageable != null) {
+				page = repository.findByName(name, pageable);
+				recipes = page.getContent();
+			} else {
+				recipes = repository.findByName(name);
+			}
+		} else if (isQueryParameterEmpty(name) && !isQueryParameterEmpty(description)) {
+			if (pageable != null) {
+				page = repository.findByDescription(description, pageable);
+				recipes = page.getContent();
+			} else {
+				recipes = repository.findByDescription(description);
+			}
+		} else if (!isQueryParameterEmpty(name) && !isQueryParameterEmpty(description)) {
+			if (pageable != null) {
+				page = repository.findByNameAndDescription(name, description, pageable);
+				recipes = page.getContent();
+			} else {
+				recipes = repository.findByNameAndDescription(name, description);
 			}
 		}
-		sb.append("]");
 
-		return sb.toString();
+		// Iterator to List
+		List<Recipe> recipeList = new ArrayList<Recipe>();
+		Iterator<Recipe> recipeIter = recipes.iterator();
+		while (recipeIter.hasNext()) {
+			recipeList.add(recipeIter.next());
+		}
+
+		// build response
+		if (page != null) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add(HttpHeaders.CONTENT_RANGE,
+					page.getNumber() + "-" + page.getSize() + "/" + page.getTotalElements());
+			return new ResponseEntity<List<Recipe>>(recipeList, headers, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<Recipe>>(recipeList, HttpStatus.OK);
+		}
 	}
 
 	/**
