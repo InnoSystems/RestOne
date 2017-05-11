@@ -130,5 +130,29 @@
 		});
 	</script>
 	
+	<!-- ################### -->
+	<!-- # Get All Recipes # -->
+	<!-- ################### -->
+	
+	<p style="font-size:160%;">Get All Recipes</p>
+	<button type="button" id="buttonGetAll" >Get all</button>
+
+	<script>
+		$("#buttonGetAll").click(function() {
+			$.ajax({
+				'url': "http://localhost:8080/Recipes",
+				'type': 'GET', 
+			}).then(function(data) {
+				var divsToAppend = "";
+				for(var i=0, keys=Object.keys(data), l=keys.length; i<l; i++) {
+					console.log("bla" + i);
+					divsToAppend += '<div id="div' + (++i) + '">{"id":" + ' + data[keys].id + '", "name":"", "description":""}</div>';    
+				} 
+				$('body').append(divsToAppend);
+				return false;
+			});
+		})
+	</script>
+	
 </body>
 </html>
