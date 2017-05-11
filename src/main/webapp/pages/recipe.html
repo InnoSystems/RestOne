@@ -136,21 +136,34 @@
 	
 	<p style="font-size:160%;">Get All Recipes</p>
 	<button type="button" id="buttonGetAll" >Get all</button>
-
+	<button type="button" id="buttonClearGetAll" >clear</button>
+	<div id="divShowAllRecipes"></div>
+	
 	<script>
 		$("#buttonGetAll").click(function() {
 			$.ajax({
 				'url': "http://localhost:8080/Recipes",
 				'type': 'GET', 
 			}).then(function(data) {
+				<!-- clear old data in div -->
+				jQuery('#divShowAllRecipes div').html('');
+				
+				<!-- add new data in div -->
 				var divsToAppend = "";
-				for(var i=0, keys=Object.keys(data), l=keys.length; i<l; i++) {
-					console.log("bla" + i);
-					divsToAppend += '<div id="div' + (++i) + '">{"id":" + ' + data[keys].id + '", "name":"", "description":""}</div>';    
-				} 
-				$('body').append(divsToAppend);
+				var i = 0;
+				$.each(data, function(index, value) {
+					divsToAppend += '<div id="div' + (++i) + '">{"id":"' + value.id + '", "name":"' + 
+						value.name + '", "description":"'+ value.description + '"}</div>';    
+				});
+				$('#divShowAllRecipes').append(divsToAppend);
 				return false;
 			});
+		})
+		
+		$("#buttonClearGetAll").click(function() {
+			<!-- clear old data in div -->	
+			jQuery('#divShowAllRecipes div').html('');
+			return false;
 		})
 	</script>
 	
