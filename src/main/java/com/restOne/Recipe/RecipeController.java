@@ -41,18 +41,17 @@ public class RecipeController {
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	public String getRecipe(@PathVariable(value = "id") final String id) {
+	public ResponseEntity<Recipe> getRecipe(@PathVariable(value = "id") final String id) {
 
 		log.info("get recipe by id " + id);
 
 		Recipe recipe = repository.findOne(id);
 
-		String response = "";
 		if (recipe != null) {
-			response = recipe.toString();
+			return new ResponseEntity<Recipe>(recipe, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Recipe>(recipe, HttpStatus.NOT_FOUND);
 		}
-
-		return response;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -138,14 +137,16 @@ public class RecipeController {
 	 * @return response
 	 */
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-	public String updateRecipe(@PathVariable(value = "id") final String id, @RequestBody Recipe recipe) {
+	public ResponseEntity<Recipe> updateRecipe(@PathVariable(value = "id") final String id,
+			@RequestBody Recipe recipe) {
 
 		log.debug("start updating recipe");
 
 		// get recipe
 		Recipe receivedRecipe = repository.findOne(id);
 		if (receivedRecipe == null) {
-			return "didn't found recipe for id: " + id;
+			log.warn("Couldn't found Recipe with id " + id);
+			return new ResponseEntity<Recipe>(HttpStatus.NOT_FOUND);
 		}
 
 		// update recipe
@@ -153,17 +154,22 @@ public class RecipeController {
 		receivedRecipe.setDescription(recipe.getDescription());
 		Recipe updatedRecipe = repository.save(receivedRecipe);
 
-		return updatedRecipe.toString();
+		return new ResponseEntity<Recipe>(updatedRecipe, HttpStatus.OK);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-	public String deleteRecipeByID(@PathVariable(value = "id") final String id) {
+	public ResponseEntity<Recipe> deleteRecipeByID(@PathVariable(value = "id") final String id) {
 
 		log.info("delete recipe by id " + id);
 
-		repository.delete(id);
+		try {
+			repository.delete(id);
+		} catch (IllegalArgumentException ex) {
+			log.warn("Couldn't found Recipe with id " + id);
+			return new ResponseEntity<Recipe>(HttpStatus.NOT_FOUND);
+		}
 
-		return "ok";
+		return new ResponseEntity<Recipe>(HttpStatus.OK);
 	}
 
 	/**

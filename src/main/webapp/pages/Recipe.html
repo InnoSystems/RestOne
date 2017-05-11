@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Demo Recipe</title>
+<link rel="stylesheet" type="text/css" href="../lib/css/style.css" />
+<script src="http://code.jquery.com/jquery-3.2.1.min.js"
+	type="text/javascript"></script>
+<script src="../lib/js/postJSON.js"></script>
+</head>
+<body>
+
+	<!-- ################# -->
+	<!-- # Create Recipe # -->
+	<!-- ################# -->
+
+	<p style="font-size:160%;">Create Recipe</p>
+	<form id="form_post">
+		<input type="text" value="name" id="txt_name"><br> 
+		<input type="text" value="description" id="txt_description"><br>
+		<input type="submit" value="Create">
+	</form>
+	<label for="created_Label" style="color: Red; line-height: 40px; display: none">Created</label>
+
+	<script>
+		$(document).ready(function() {
+			$("#form_post").submit(function() {
+				$.postJSON("http://localhost:8080/Recipes", {
+					name : $('#txt_name').val(),
+					description : $('#txt_description').val()
+				});
+				$('label[for="created_Label"]').show().delay(1000).fadeOut();
+				return false;
+			})
+		});
+	</script>
+
+	<!-- #################### -->
+	<!-- # Get Recipe by ID # -->
+	<!-- #################### -->
+
+	<p style="font-size:160%;">Get Recipe by ID</p>
+	<form id="form_get_by_id">
+		<input type="text" value="id" size="40" id="getByIdInput"><br> 
+		<input class="submit" type="submit" value="Get">
+	</form>
+	
+	<label for="label_name_text">Name:</label>
+	<label id="label_name_value_id" for="label_name_value"></label>
+	<br>
+	<label for="label_description_text">Description:</label>
+	<label id="label_description_value_id" for="label_description_value"></label>
+	<br>
+	<label for="getByIdInfo" style="color: Red; line-height: 40px; display: none">Not found</label>
+	
+	<script>
+		$("#form_get_by_id").submit(function() {
+			$.ajax({
+				url : "http://localhost:8080/Recipes/" + $('#getByIdInput').val(),
+				type: 'GET',
+				error: function() {
+					$('label[for="getByIdInfo"]').show().delay(1000).fadeOut();
+				}
+			}).then(function(data) {
+				$("#label_name_value_id").text(data.name);
+				$("#label_description_value_id").text(data.description);
+			});
+			return false;
+		});
+	</script>
+	
+	<!-- ####################### -->
+	<!-- # Delete Recipe by ID # -->
+	<!-- ####################### -->
+	
+	<p style="font-size:160%;">Delete Recipe by ID</p>
+	<form id="form_delete_by_id">
+		<input type="text" value="id" size="40" id="deleteByIdInput"><br> 
+		<input type="submit" value="Delete">
+	</form>
+	<label for="deleteByIdInfo" style="color: Red; line-height: 40px; display: none">empty</label>
+	
+	<script>
+		$("#form_delete_by_id").submit(function() {
+			$.ajax({
+				url : "http://localhost:8080/Recipes/" + $('#deleteByIdInput').val(),	
+				type: 'DELETE',
+				error: function() {
+					$('label[for="deleteByIdInfo"]').text("Not found").show().delay(1000).fadeOut();
+				}
+			}).then(function(data) {
+				$('label[for="deleteByIdInfo"]').text("Deleted").show().delay(1000).fadeOut();
+			});
+			return false;
+		});
+	</script>
+	
+	<!-- ####################### -->
+	<!-- # Update Recipe by ID # -->
+	<!-- ####################### -->
+	
+	<p style="font-size:160%;">Update Recipe by ID</p>
+	<form id="form_update_by_id">
+		<input type="text" value="id" id="updateByIdInputId"><br> 
+		<input type="text" value="name" id="updateByIdInputName"><br>
+		<input type="text" value="description" id="updateByIdInputDescription"><br>
+		<input type="submit" value="Update">
+	</form>
+	<label for="updated_Label" style="color: Red; line-height: 40px; display: none">Updated</label>
+	
+	<script>
+		$("#form_update_by_id").submit(function() {
+			$.ajax({
+				'url': "http://localhost:8080/Recipes/" + $('#updateByIdInputId').val(),
+				'type': 'PUT',
+		        'data': JSON.stringify({
+					id : $('#updateByIdInputId').val(),		        	
+		        	name : $('#updateByIdInputName').val(),
+					description : $('#updateByIdInputDescription').val()
+		        }),
+		        'contentType': 'application/json',
+		        'dataType': 'json',
+		        error: function() {
+					$('label[for="updated_Label"]').text("Not found").show().delay(1000).fadeOut();
+				}
+		    }).then(function(data) {
+				$('label[for="updated_Label"]').text("Updated").show().delay(1000).fadeOut();
+			});
+			return false;
+		});
+	</script>
+	
+	<!-- ################### -->
+	<!-- # Get All Recipes # -->
+	<!-- ################### -->
+	
+	<p style="font-size:160%;">Get All Recipes</p>
+	<button type="button" id="buttonGetAll" >Get all</button>
+
+	<script>
+		$("#buttonGetAll").click(function() {
+			$.ajax({
+				'url': "http://localhost:8080/Recipes",
+				'type': 'GET', 
+			}).then(function(data) {
+				var divsToAppend = "";
+				for(var i=0, keys=Object.keys(data), l=keys.length; i<l; i++) {
+					console.log("bla" + i);
+					divsToAppend += '<div id="div' + (++i) + '">{"id":" + ' + data[keys].id + '", "name":"", "description":""}</div>';    
+				} 
+				$('body').append(divsToAppend);
+				return false;
+			});
+		})
+	</script>
+	
+</body>
+</html>
