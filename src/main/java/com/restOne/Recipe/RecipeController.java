@@ -60,18 +60,18 @@ public class RecipeController {
 			@RequestParam(name = "name", required = false) final String name,
 			@RequestParam(name = "description", required = false) final String description) {
 
-		Pageable pageable = null;
+		OffsetBasedPageRequest pageable = null;
 		if (headerValueRange != null && headerValueRange.length() > 0) {
-			int page, size;
+			int offset, limit;
 
 			// expect e.g item=1-20
 			String value = headerValueRange;
 			value = value.replace("item=", "");
 			String[] ranges = value.split("-");
-			page = Integer.valueOf(ranges[0]);
-			size = Integer.valueOf(ranges[1]);
-
-			pageable = new PageRequest(page, size);
+			offset = Integer.valueOf(ranges[0]);
+			limit = Integer.valueOf(ranges[1]);
+			
+			pageable = new OffsetBasedPageRequest(offset, (limit-offset));
 		}
 
 		Iterable<Recipe> recipes = null;
@@ -117,7 +117,7 @@ public class RecipeController {
 		if (page != null) {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.CONTENT_RANGE,
-					page.getNumber() + "-" + page.getSize() + "/" + page.getTotalElements());
+					pageable.getOffset() + "-" + (pageable.getLimit() + pageable.getOffset()) + "/" + page.getTotalElements());
 			return new ResponseEntity<List<Recipe>>(recipeList, headers, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<List<Recipe>>(recipeList, HttpStatus.OK);
