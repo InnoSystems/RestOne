@@ -134,7 +134,7 @@
 	<!-- # Get All Recipes # -->
 	<!-- ################### -->
 	
-	<p style="font-size:160%;">Get All Recipes</p>
+	<p style="font-size:160%;">Get all Recipes</p>
 	<button type="button" id="buttonGetAll" >Get all</button>
 	<button type="button" id="buttonClearGetAll" >clear</button>
 	<div id="divShowAllRecipes"></div>
@@ -165,6 +165,52 @@
 			jQuery('#divShowAllRecipes div').html('');
 			return false;
 		})
+	</script>
+	
+	<!-- ############################### -->
+	<!-- # Get All Recipes with paging # -->
+	<!-- ############################### -->
+	
+	<p style="font-size:160%;">Get all Recipes with paging</p>
+	<form id="formSetPaging">
+		<input type="text" value="from" id="fromInput"><br> 
+		<input type="text" value="to" id="toInput"><br>
+		<input type="submit" value="Get all">
+	</form>
+	<button type="button" id="buttonClearGetAllPaging" >clear</button>
+	<label for="getByPaginationInfo" style="color: Red; line-height: 40px; display: none">empty</label>
+	<div id="divShowAllRecipesPaging"></div>
+	
+	<script>
+	$("#formSetPaging").submit(function() {
+		$.ajax({
+			'url': "http://localhost:8080/Recipes",
+			'type': 'GET',
+			'headers': { 'Range': 'item=' + $('#fromInput').val() + '-' + $('#toInput').val() },
+			'error': function() {
+				$('label[for="getByPaginationInfo"]').text("\"from\" and \"to\" were wrong").show().delay(1000).fadeOut();
+			}
+		}).then(function(data) {
+			<!-- clear old data in div -->
+			jQuery('#divShowAllRecipesPaging div').html('');
+			
+			<!-- add new data in div -->
+			var divsToAppend = "";
+			var i = 0;
+			$.each(data, function(index, value) {
+				divsToAppend += '<div id="div' + (++i) + '">{"id":"' + value.id + '", "name":"' + 
+					value.name + '", "description":"'+ value.description + '"}</div>';    
+			});
+			$('#divShowAllRecipesPaging').append(divsToAppend);
+		});
+		return false;
+	})
+	
+	$(buttonClearGetAllPaging).click(function () {
+		<!-- clear old data in div -->	
+		jQuery('#divShowAllRecipesPaging div').html('');
+		return false;
+	})
 	</script>
 	
 </body>
