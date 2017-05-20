@@ -152,7 +152,7 @@
 				var divsToAppend = "";
 				var i = 0;
 				$.each(data, function(index, value) {
-					divsToAppend += '<div id="div' + (++i) + '">{"id":"' + value.id + '", "name":"' + 
+					divsToAppend += '<div id="div' + (i++) + '">{"id":"' + value.id + '", "name":"' + 
 						value.name + '", "description":"'+ value.description + '"}</div>';    
 				});
 				$('#divShowAllRecipes').append(divsToAppend);
@@ -198,7 +198,7 @@
 			var divsToAppend = "";
 			var i = 0;
 			$.each(data, function(index, value) {
-				divsToAppend += '<div id="div' + (++i) + '">{"id":"' + value.id + '", "name":"' + 
+				divsToAppend += '<div id="div' + (i++) + '">{"id":"' + value.id + '", "name":"' + 
 					value.name + '", "description":"'+ value.description + '"}</div>';    
 			});
 			$('#divShowAllRecipesPaging').append(divsToAppend);
