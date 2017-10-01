@@ -1,14 +1,14 @@
 $(function() {
 	$("#send1").click(function() {
 		$.ajax({
-			url : "http://localhost:8080/greeting"
+			url : "${restone.serverurl}/greeting"
 		}).then(function(data) {
 			$('.greeting1-id').text("The ID is: " + data.id);
 			$('.greeting1-content').text("The content is: " + data.content);
 		});
 	});
 	$("#send2").click(function() {
-		var str1 = "http://localhost:8080/greeting?name=";
+		var str1 = "${restone.serverurl}/greeting?name=";
 		var str2 = $("#input1").val();
 		var str3 = str1 + str2;
 		$.ajax({
