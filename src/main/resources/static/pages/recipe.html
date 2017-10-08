@@ -26,7 +26,7 @@
 	<script>
 		$(document).ready(function() {
 			$("#form_post").submit(function() {
-				$.postJSON("http://localhost:8080/Recipes", {
+				$.postJSON("@restone.serverurl@:@server.port@/Recipes", {
 					name : $('#txt_name').val(),
 					description : $('#txt_description').val()
 				});
@@ -58,7 +58,7 @@
 	<script>
 		$("#form_get_by_id").submit(function() {
 			$.ajax({
-				url : "http://localhost:8080/Recipes/" + $('#getByIdInput').val(),
+				url : "@restone.serverurl@:@server.port@/Recipes/" + $('#getByIdInput').val(),
 				type: 'GET',
 				error: function() {
 					$('label[for="getByIdInfo"]').show().delay(1000).fadeOut();
@@ -86,7 +86,7 @@
 	<script>
 		$("#form_delete_by_id").submit(function() {
 			$.ajax({
-				url : "http://localhost:8080/Recipes/" + $('#deleteByIdInput').val(),	
+				url : "@restone.serverurl@:@server.port@/Recipes/" + $('#deleteByIdInput').val(),	
 				type: 'DELETE',
 				error: function() {
 					$('label[for="deleteByIdInfo"]').text("Not found").show().delay(1000).fadeOut();
@@ -115,7 +115,7 @@
 	<script>
 		$("#form_update_by_id").submit(function() {
 			$.ajax({
-				'url': "http://localhost:8080/Recipes/" + $('#updateByIdInputId').val(),
+				'url': "@restone.serverurl@:@server.port@/Recipes/" + $('#updateByIdInputId').val(),
 				'type': 'PUT',
 		        'data': JSON.stringify({
 					id : $('#updateByIdInputId').val(),		        	
@@ -146,7 +146,7 @@
 	<script>
 		$("#buttonGetAll").click(function() {
 			$.ajax({
-				'url': "http://localhost:8080/Recipes",
+				'url': "@restone.serverurl@:@server.port@/Recipes",
 				'type': 'GET', 
 			}).then(function(data) {
 				<!-- clear old data in div -->
@@ -189,7 +189,7 @@
 	<script>
 	$("#formSetPaging").submit(function() {
 		$.ajax({
-			'url': "http://localhost:8080/Recipes",
+			'url': "@restone.serverurl@:@server.port@/Recipes",
 			'type': 'GET',
 			'headers': { 'Range': 'item=' + $('#fromInput').val() + '-' + $('#toInput').val() },
 			'error': function() {

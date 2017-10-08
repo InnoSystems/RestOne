@@ -46,15 +46,11 @@
 
 	<build>
 		<filters>
-			<filter>src/main/filters/default.properties</filter>
+			<filter>src/main/resources/application.properties</filter>
 		</filters>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-			<resource>
-				<directory>src/main/resources/static</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
