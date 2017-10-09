@@ -43,7 +43,6 @@
 		<start-class>com.restOne.Application</start-class>
 	</properties>
 
-
 	<build>
 		<filters>
 			<filter>src/main/resources/application.properties</filter>
