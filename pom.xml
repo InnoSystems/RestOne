@@ -43,9 +43,12 @@
 		<!-- <start-class>com.restOne.Application</start-class>  -->
 	</properties>
 
+	<profiles>
+	<profile>
+	<id>netcup</id>
 	<build>
 		<filters>
-			<filter>src/main/resources/application.properties</filter>
+			<filter>src/main/resources/profile_netcup.properties</filter>
 		</filters>
 		<resources>
 			<resource>
@@ -64,5 +67,30 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	</profile>
+	<profile>
+	<id>develop</id>
+	<build>
+		<filters>
+			<filter>src/main/resources/profile_develop.properties</filter>
+		</filters>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<addResources>true</addResources>
+					<mainClass>com.restOne.Application</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	</profile>
+</profiles>
 </project>
