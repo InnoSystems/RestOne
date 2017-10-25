@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 * 
 * <P>Various attributes of guitars, and related behaviour.
 *  
-* <P>Note that {@link BigDecimal} is used to model the price - not double or float. 
-* See {@link #Guitar(String, BigDecimal, Integer)} for more information.
+* <P>Note that is used to model the price - not double or float. 
+* See for more information.
 *  
 * @author akaminski
 * @version 1.0.1
