@@ -18,13 +18,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Guitar Model Object.
- * 
  * <P>
  * Various attributes of guitars, and related behaviour.
- * 
  * <P>
  * Note that is used to model the price - not double or float. See for more
  * information.
+ * <ul>
+ * <li>the first item
+ * <li>the second item
+ * <li>the third item
+ * </ul>
  * 
  * @author akaminski
  * @version 1.0.1
