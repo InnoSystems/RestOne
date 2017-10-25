@@ -22,6 +22,10 @@ public class Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
+    /**
+     * Entry main of the restOne project
+     * @param args agrs are forwarded to SpringApplication.run
+     */
     public static void main(String[] args) {
     	final ApplicationContext ctx = SpringApplication.run(Application.class, args);
     	final TypeSafeConfiguration typeSafeConfiguration = ctx.getBean(TypeSafeConfiguration.class);
