@@ -17,16 +17,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
-* Guitar Model Object.
-* 
-* <P>Various attributes of guitars, and related behaviour.
-*  
-* <P>Note that is used to model the price - not double or float. 
-* See for more information.
-*  
-* @author akaminski
-* @version 1.0.1
-*/
+ * Guitar Model Object.
+ * 
+ * <P>
+ * Various attributes of guitars, and related behaviour.
+ * 
+ * <P>
+ * Note that is used to model the price - not double or float. See for more
+ * information.
+ * 
+ * @author akaminski
+ * @version 1.0.1
+ */
 @ComponentScan(basePackages = { "com.restOne.Recipe", "com.restOne.greeting", "com.restOne.configurationExample" })
 @SpringBootApplication
 public class Application {
@@ -35,8 +37,10 @@ public class Application {
 
     /**
      * 
-     * @param ctx the ApplicationContext
-     * @param repository the RecipeRepository
+     * @param ctx
+     *            the ApplicationContext
+     * @param repository
+     *            the RecipeRepository
      * @return CommandLineRunner
      */
     @Bean
@@ -52,29 +56,41 @@ public class Application {
 	    LOG.debug("inspected the beans");
 	};
     }
-    
+
     /**
-     * <p>Simple file logger
-     * @param text to log
+     * Simple file logger First paragraph.
+     * <p>
+     * <ul>
+     * <li>the first item
+     * <li>the second item
+     * <li>the third item
+     * </ul>
+     * <p>
+     * Second paragraph.
+     * 
+     * @param text
+     *            to log
      */
     private static void info(String text) {
-        System.out.println(String.format("Application.java: %s", text));
+	System.out.println(String.format("Application.java: %s", text));
     }
-    
+
     /**
      * Entry main of the restOne project
      * <p>
      * Nothing else to say
-     * @param args are forwarded to SpringApplication.run
+     * 
+     * @param args
+     *            are forwarded to SpringApplication.run
      */
     public static void main(String[] args) {
-    	final ApplicationContext ctx = SpringApplication.run(Application.class, args);
-    	final TypeSafeConfiguration typeSafeConfiguration = ctx.getBean(TypeSafeConfiguration.class);
-        final AnnotationConfiguration annotationConfiguration = ctx.getBean(AnnotationConfiguration.class);
+	final ApplicationContext ctx = SpringApplication.run(Application.class, args);
+	final TypeSafeConfiguration typeSafeConfiguration = ctx.getBean(TypeSafeConfiguration.class);
+	final AnnotationConfiguration annotationConfiguration = ctx.getBean(AnnotationConfiguration.class);
 
-        info("Application initialized with the following configuration:");
-        info(typeSafeConfiguration.toString());
-        info(annotationConfiguration.toString());
-        System.out.println();
+	info("Application initialized with the following configuration:");
+	info(typeSafeConfiguration.toString());
+	info(annotationConfiguration.toString());
+	System.out.println();
     }
 }
