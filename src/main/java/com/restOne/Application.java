@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
  * <li>the third item
  * </ul>
  * 
- * @author akaminski
  * @version 1.0.1
  */
 @ComponentScan(basePackages = { "com.restOne.Recipe", "com.restOne.greeting", "com.restOne.configurationExample" })
