@@ -16,6 +16,17 @@ import com.restOne.configurationExample.TypeSafeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+* Guitar Model Object.
+* 
+* <P>Various attributes of guitars, and related behaviour.
+*  
+* <P>Note that {@link BigDecimal} is used to model the price - not double or float. 
+* See {@link #Guitar(String, BigDecimal, Integer)} for more information.
+*  
+* @author akaminski
+* @version 1.0.1
+*/
 @ComponentScan(basePackages = { "com.restOne.Recipe", "com.restOne.greeting", "com.restOne.configurationExample" })
 @SpringBootApplication
 public class Application {
@@ -23,8 +34,38 @@ public class Application {
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
     /**
+     * 
+     * @param ctx the ApplicationContext
+     * @param repository the RecipeRepository
+     * @return CommandLineRunner
+     */
+    @Bean
+    public CommandLineRunner commandLineRunner(ApplicationContext ctx, RecipeRepository repository) {
+
+	return args -> {
+	    System.out.println("Let's inspect the beans provided by Spring Boot:");
+	    String[] beanNames = ctx.getBeanDefinitionNames();
+	    Arrays.sort(beanNames);
+	    for (String beanName : beanNames) {
+		System.out.println(beanName);
+	    }
+	    LOG.debug("inspected the beans");
+	};
+    }
+    
+    /**
+     * <p>Simple file logger
+     * @param text to log
+     */
+    private static void info(String text) {
+        System.out.println(String.format("Application.java: %s", text));
+    }
+    
+    /**
      * Entry main of the restOne project
-     * @param args agrs are forwarded to SpringApplication.run
+     * <p>
+     * Nothing else to say
+     * @param args are forwarded to SpringApplication.run
      */
     public static void main(String[] args) {
     	final ApplicationContext ctx = SpringApplication.run(Application.class, args);
@@ -36,27 +77,4 @@ public class Application {
         info(annotationConfiguration.toString());
         System.out.println();
     }
-
-    @Bean
-    public CommandLineRunner commandLineRunner(ApplicationContext ctx, RecipeRepository repository) {
-
-	return args -> {
-
-	    System.out.println("Let's inspect the beans provided by Spring Boot:");
-
-	    String[] beanNames = ctx.getBeanDefinitionNames();
-	    Arrays.sort(beanNames);
-	    for (String beanName : beanNames) {
-		System.out.println(beanName);
-	    }
-
-	    LOG.debug("inspected the beans");
-
-	};
-    }
-    
-    private static void info(String text) {
-        System.out.println(String.format("Application.java: %s", text));
-    }
-
 }
